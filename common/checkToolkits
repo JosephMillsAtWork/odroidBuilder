@@ -1,0 +1,72 @@
+#!/bin/bash
+. common/common.sh
+allKits(){
+## C1 compilers aka gnueabihf 4.9 and eabi 4.8 
+if [ ! -f $rootDir/archive/gcc-linaro-arm-none-eabi-4.8-2014.04_linux.tar.xz ];
+then
+        cd $roiotDir/archive
+        wget http://releases.linaro.org/14.04/components/toolchain/binaries/gcc-linaro-arm-none-eabi-4.8-2014.04_linux.tar.xz
+       # echo "Extracting arm-none-eabi toolchain Thanks linaro !  "
+        xz -d  gcc-linaro-arm-none-eabi-4.8-2014.04_linux.tar.xz
+        tar xf gcc-linaro-arm-none-eabi-4.8-2014.04_linux.tar -C $rootDir/toolchains
+elif [  ! -f $rootDir/archive/gcc-linaro-arm-none-eabi-4.8-2014.04_linux.tar  ];
+then
+        cd $rootDir/archive
+       # echo "Extracting the Cross Compile (arm-none-eabi) toolchain Thanks linaro ! "
+        xz -d  gcc-linaro-arm-none-eabi-4.8-2014.04_linux.tar.xz
+        tar xf gcc-linaro-arm-none-eabi-4.8-2014.04_linux.tar -C $rootDir/toolchains
+else 
+	cd $rootDir/archive
+      #  echo "Extracting the Cross Compile (arm-none-eabi )toolchain Thanks linaro ! "
+        tar xf gcc-linaro-arm-none-eabi-4.8-2014.04_linux.tar -C $rootDir/toolchains
+fi
+# http://releases.linaro.org/14.09/components/toolchain/binaries/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux.tar.xz
+# /gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux.tar.xz
+
+if [ ! -f $rootDir/archive/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux.tar.xz ];
+then
+        cd $rootDir/archive
+        wget http://releases.linaro.org/14.09/components/toolchain/binaries/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux.tar.xz
+       # echo "Extracting the Cross Compile ( 4.9 ) toolchain Thanks linaro !"
+        tar xf gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux.tar.xz -C  $rootDir/toolchains
+else
+        cd $rootDir/archive
+       # echo "Extracting the Cross Compile ( 4.9 ) toolchain Thanks linaro ! "
+        tar xf gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux.tar.xz -C $rootDir/toolchains
+fi
+
+
+
+## U2/3 cross compilers eabi 4.4.3 and gnueabihf (4.7)
+if [ ! -f $rootDir/archive/arm-eabi-4.4.3.tar.gz ];
+then
+        cd $rootDir/archive
+        wget http://dn.odroid.com/toolchains/arm-eabi-4.4.3.tar.gz
+      #  echo "Extracting the arm eabi Cross Compile toolchain"
+        tar xzf arm-eabi-4.4.3.tar.gz -C $rootDir/toolchains
+else
+        cd $rootDir/archive
+      #  echo "Extracting the arm eabi Cross Compile toolchain"
+        tar xzf arm-eabi-4.4.3.tar.gz -C $rootDir/toolchains
+fi
+
+if [ ! -f $rootDir/archive/gcc-linaro-arm-linux-gnueabihf-4.7-2013.04-20130415_linux.tar.bz2 ];
+then
+        cd $rootDir/archive
+        wget https://releases.linaro.org/13.04/components/toolchain/binaries/gcc-linaro-arm-linux-gnueabihf-4.7-2013.04-20130415_linux.tar.bz2
+      #  echo "Extracting the Cross Compile toolchain"
+        tar jxf gcc-linaro-arm-linux-gnueabihf-4.7-2013.04-20130415_linux.tar.bz2 -C $rootDir/toolchains
+else
+        cd $rootDir/archive
+       # echo "Extracting the Cross Compile ( 4.7 ) toolchain Thanks linaro ! "
+        tar jxf gcc-linaro-arm-linux-gnueabihf-4.7-2013.04-20130415_linux.tar.bz2 -C $rootDir/toolchains
+fi
+
+
+
+## in are checdkToolkit file there is a functiomn that taht puts us 
+## in the archivre folder this is why we change back to the root dir 
+##FIXME move this over to the 
+cd $rootDir
+
+}

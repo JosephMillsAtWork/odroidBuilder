@@ -1,0 +1,60 @@
+#!/bin/bash
+## PLEASE READ:
+## THIS FILE IS NOT TO BE RUN BY HUMAN
+## One alters this so that it runs in the cron scripts. 
+
+cat << EOF > mangoes-$architecture/debconf.set
+console-common console-data/keymap/policy select Select keymap from full list
+console-common console-data/keymap/full select us
+EOF
+
+
+dpkg-divert --add --local --divert /usr/sbin/invoke-rc.d.chroot --rename /usr/sbin/invoke-rc.d
+cp /bin/true /usr/sbin/invoke-rc.d
+echo -e "#!/bin/sh\nexit 101" > /usr/sbin/policy-rc.d
+chmod +x /usr/sbin/policy-rc.d
+
+sed -i -e 's/KERNEL\!=\"eth\*|/KERNEL\!=\"/' /lib/udev/rules.d/75-persistent-net-generator.rules
+rm -f /etc/udev/rules.d/70-persistent-net.rules
+rm -f /usr/sbin/policy-rc.d
+rm -f /usr/sbin/invoke-rc.d
+dpkg-divert --remove --rename /usr/sbin/invoke-rc.d
+
+
+# Add the user mango and make the password for root and mango "mango" 
+add_mango_user(){
+  adduser --disabled-password --gecos "" mango
+  echo "mango:mango" | chpasswd
+  echo "root:mango" | chpasswd
+}
+
+# Add the user mango to all the groups
+add_mango_user_to_groups() {
+  groupadd -f -r input
+  for GRP in adm cdrom audio sudo video games plugdev; 
+  do
+    adduser mango $GRP
+  done
+}
+
+add_mango_user
+add_mango_user_to_groups
+
+apt-get update
+apt-get --yes --force-yes install $packages
+
+debconf-set-selections /debconf.set
+rm -f /debconf.set
+
+addColortoBashRC(){
+  sed -i "s|#force_color_prompt=yes|force_color_prompt=yes|g" /home/mango/.bashrc
+  cat /home/mango/.bashrc > /root/.bashrc
+}
+
+addColortoBashRC
+
+cd -
+
+echo "America/Denver" > /etc/timezone
+
+rm -f /third-stage

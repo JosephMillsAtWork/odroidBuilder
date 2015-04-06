@@ -1,0 +1,15 @@
+#!/bin/bash
+## this is the default sources list that we use.  
+## 1 = the patgh to where it should go 
+## 2 = the distro code name 
+
+addUbuntuRepo(){
+cat << EOF > $1
+deb http://ports.ubuntu.com $2 main universe multiverse restricted
+deb-src http://ports.ubuntu.com $2 main universe multiverse restricted
+
+deb http://download.webmin.com/download/repository sarge contrib
+deb http://webmin.mirror.somersettechsolutions.co.uk/repository sarge contrib
+EOF
+}
+

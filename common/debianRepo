@@ -1,0 +1,27 @@
+#!/bin/bash
+## this is the default sources list that we use.  
+## 1 = the patgh to where it should go 
+## 2 = the distro code name 
+
+addDebianRepo(){
+cat << EOF > $1
+## Debians main contrib and non-free repo's. For more information about debian
+## repository please see the debian help book
+## https://www.debian.org/doc/user-manuals
+## see also
+## https://wiki.debian.org/SourcesList
+deb http://ftp.debian.org/debian $2 main contrib non-free
+deb-src http://ftp.debian.org/debian $2 main contrib non-free
+
+## Debian security updates.
+deb http://security.debian.org/debian-security $2/updates main contrib non-free
+
+## debian backport repo's these are used ONLY if you know what you are doing,
+## But these are used to get applications that are in testing and use them
+## in statble Which by default this MangoRES has been set up to use
+## deb http://http.debian.net/debian $2-backports main contrib non-free
+
+deb http://deb.odroid.in/c1/ trusty main
+deb http://deb.odroid.in/ trusty main
+EOF
+}

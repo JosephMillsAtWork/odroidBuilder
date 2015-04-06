@@ -1,0 +1,14 @@
+#!/bin/bash
+
+## This is used to install extra packages to the given distros. 
+## There can be more added on to this later as far as functions 
+## for checking versions
+
+
+odroidCRepo="aml-libs mali-x11 xserver-xorg-video-mali"
+odroidRepo=""
+arm="abootimg cgpt fake-hwclock ntpdate vboot-utils vboot-kernel-utils u-boot-tools"
+base="initramfs-tools binutils ca-certificates usbutils console-common console-setup usbmount keyboard-configuration locales"
+tools="nmap bash-completion debconf-utils  unzip  less fbset sudo psmisc strace module-init-tools ifplugd curl nano"
+wireless="wpasupplicant wireless-tools firmware-atheros firmware-brcm80211 firmware-libertas firmware-ralink firmware-realtek firmware-iwlwifi"
+services="openssh-server "

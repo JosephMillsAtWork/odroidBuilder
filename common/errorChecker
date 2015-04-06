@@ -1,0 +1,40 @@
+#!/bin/bash 
+## common file to view the last commands status.
+status=0
+
+checkStatus(){
+if [ $? == 0  ];
+then 
+	status=0
+else 
+	status=1
+fi
+}
+
+
+crossCompileCheck(){
+if [ $(compgen -c $CROSS_COMPILE | wc -l) -eq 0 ] ;
+then
+    ## copy over bootstrap files
+    cp -r static/css $basedir/web/
+    cp -r static/js $basedir/web/
+    cp -r static/fonts $basedir/web/
+    cp -r static/img $basedir/web/
+    cat config/header.html > $basedir/web/index.html
+    cat config/body.html >> $basedir/web/index.html
+    echo "<h1 id='errorHeader'>Missing cross compiler. Set up PATH please in the run file<h1>" >> $basedir/web/index.html
+    cat config/footer.html >> $basedir/web/index.html 
+    if [ $uploadStaticWeb == 1 ];
+    then
+      $scpCMD $basedir/web
+      echo "Cross Compiler not Found Please see INSTALL file"   
+      exit 1
+    else 
+      echo "Cross Compiler not Found Please see INSTALL file"   
+      exit 1
+    fi
+fi
+
+
+
+}

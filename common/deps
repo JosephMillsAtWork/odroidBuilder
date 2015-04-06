@@ -1,0 +1,53 @@
+#!/bin/bash
+
+machineType=$(uname -m)
+
+# make logfiles so we can make in main script
+makeDepsLog(){
+depsLogFile=config/depsLogFile.html
+touch $depsLogFile;
+
+cat config/header.html > $depsLogFile
+cat config/body.html >> $depsLogFile
+cat <<EOF>> $depsLogFile
+<h1 class="page-header">Debootstrap Log File</h1>
+	<h3>Pre Deps Log</h3>
+	<hr>
+	<label for="stageOne">Install packages</label>
+	<textarea class="form-control" overview="auto" rows="5" id="stageOne">
+EOF
+}
+makeDepsLog
+
+apt-get install -y git-core gnupg flex bison gperf libesd0-dev build-essential \
+zip curl libncurses5-dev zlib1g-dev libncurses5-dev gcc-multilib g++-multilib \
+parted figlet kpartx debootstrap pixz qemu-user-static abootimg cgpt vboot-kernel-utils \
+vboot-utils u-boot-tools bc lzma lzop automake autoconf m4 dosfstools pixz rsync \
+schedtool git dosfstools lvm2 e2fsprogs tidy device-tree-compiler >> $depsLogFile 2>&1;
+echo "</textarea>" >> $depsLogFile
+
+if [ ${machineType} == 'x86_64' ]; 
+then
+    echo "<h3>Adding i388 arch and updating system</h3><hr>" >> $depsLogFile
+    echo "<textarea class='form-control' overview='auto' rows='5'>" >> $depsLogFile
+    dpkg --add-architecture i386
+    apt-get update  >> $depsLogFile 2>&1
+    echo "</textarea><h3>Adding ncurses and 32z1</h3><hr>" >> $depsLogFile
+    echo "<textarea class='form-control' overview='auto' rows='5'>" >> $depsLogFile
+    apt-get install -y lib32z1 lib32ncurses5   >> $depsLogFile 2>&1
+    # Required for kernel cross compiles
+    apt-get install -y libncurses5:i386  >> $depsLogFile 2>&1
+    echo "</textarea>" >> $depsLogFile 
+elif [ ${machineType} == 'UNKNOWN' ];
+then
+    echo "Sorry dont know what kinda arch the host computer is you can set this in common/common"
+    exit 1
+else 
+    echo "<h3>Adding ncurses</h3><hr>" >> $depsLogFile
+    echo "<textarea class='form-control' overview='auto' rows='5'>" >> $depsLogFile
+    apt-get install -y libncurses5  >> $depsLogFile  2>&1
+    echo "</textarea>" >> $depsLogFile
+fi
+ 
+cat  config/footer.html >> $depsLogFile
+ 
